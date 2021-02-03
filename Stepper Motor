@@ -1,0 +1,76 @@
+#include <io.h>
+#include <mega32a.h>
+#include <delay.h>
+  char x,d=50; 
+char read_key(void) 
+ 
+            if(PINA!=0XFF)
+            {     
+               delay_ms(50);
+                if(!(PINA&0X01)) x=1;
+                if(!(PINA&0X02)) x=2;
+                if(!(PINA&0X04)) x=3;
+                if(!(PINA&0X08)) x=4; 
+            return x; 
+            }
+} 
+ 
+void navasani(void)
+{
+  PORTD=8;
+            delay_ms(d);
+            PORTD=4;
+            delay_ms(d);
+            PORTD=2;
+            delay_ms(d);
+            PORTD=1;
+            delay_ms(d);
+}
+ 
+void half_step(void) 
+{
+            PORTD=9;
+            delay_ms(d);
+            PORTD=1;
+            delay_ms(d);
+            PORTD=3;
+            delay_ms(d);
+            PORTD=2;
+            delay_ms(d);
+            PORTD=6;
+            delay_ms(d);
+            PORTD=4;
+            delay_ms(d);
+            PORTD=0x0c;
+            delay_ms(d);
+            PORTD=8;
+            delay_ms(d);
+}
+void two_phase(void)
+{
+ 
+            PORTD=0x0c;
+            delay_ms(d);
+            PORTD=6;
+            delay_ms(d);
+            PORTD=3;
+            delay_ms(d);
+            PORTD=9;
+            delay_ms(d);
+ 
+}
+ 
+void main(void)
+{
+DDRA=0X00; 
+PORTA=0XFF; 
+DDRD=0XFF;  
+while (1)
+      { 
+       read_key();
+      if(x==1) navasani();
+      if(x==2) half_step();
+      if(x==3) two_phase();
+      } 
+ 
+}
