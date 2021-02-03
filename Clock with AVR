@@ -1,0 +1,43 @@
+#include <mega8.h>
+#include <alcd.h>
+#include <stdio.h>
+#include <i2c.h>
+#include <ds1307.h>
+#include <delay.h>
+ 
+#define h PINC.1
+#define m PINC.2
+ 
+unsigned char hour,min,sec,buffer[16];
+ 
+void main(void)
+  {
+  //IO
+  DDRC=0x00; 
+  //LCD
+  lcd_init(16);
+  #asm("sei")
+  while (1)
+    {
+    rtc_get_time(&hour,&min,&sec);
+    sprintf(buffer,"%02d:%02d:%02d",hour,min,sec);     
+    lcd_gotoxy(4,0);
+    lcd_puts(buffer); 
+    lcd_gotoxy(2,1);
+    lcd_puts("By. Arash");
+    if(h==0)
+      {  
+      hour++; 
+      if(hour>23)hour=0;
+      delay_ms(250);
+      rtc_set_time(hour,min,sec);
+      }
+    if(m==0)
+      {  
+      min++;  
+      if(min>59)min=0;
+      delay_ms(250);
+      rtc_set_time(hour,min,sec);  
+      }
+    }
+  }
